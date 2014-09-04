@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxScrollable.h"
+#include "ofxScrollableFBO.h"
+#include "ofxScrollablePanel.h"
 
 class testApp : public ofBaseApp{
 
@@ -20,9 +21,11 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofxScrollable textShort;
+    ofxScrollableFBO textShort;
     ofPoint textShortPos;
     
-    ofxScrollable textLong;
+    ofxScrollableFBO textLong;
     ofPoint textLongPos;
+    
+    ofxScrollablePanel panel;
 };
