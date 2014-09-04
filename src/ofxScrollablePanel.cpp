@@ -26,6 +26,7 @@ void ofxScrollablePanel::setup(ofVec2f _anchor, float _width, float _height){
     width = _width;
     height = _height;
     reset();
+    ofAddListener(ofEvents().update, this, &ofxScrollablePanel::update);
 }
 
 void ofxScrollablePanel::begin(){
@@ -38,7 +39,7 @@ void ofxScrollablePanel::end(){
     ofPopMatrix();
 }
 
-void ofxScrollablePanel::update(){
+void ofxScrollablePanel::update(ofEventArgs& args){
     
     float t=ofGetElapsedTimef();
     float dt=t-time;

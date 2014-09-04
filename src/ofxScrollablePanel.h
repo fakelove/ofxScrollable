@@ -17,7 +17,7 @@ public:
     
     ~ofxScrollablePanel(){};
     void setup(ofVec2f _anchor, float width, float height);
-    void update();
+    void update(ofEventArgs& args);
     void begin();
     void end();
     void reset();
