@@ -8,8 +8,8 @@
 
 #include "ofxScrollablePanel.h"
 
-#define DAMPING 10.
-#define MASS 1.
+#define DAMPING 5.
+#define MASS 0.1
 #define K 30.
 
 ofxScrollablePanel::ofxScrollablePanel(){
@@ -26,24 +26,41 @@ void ofxScrollablePanel::setup(ofVec2f _anchor, float _width, float _height){
     width = _width;
     height = _height;
     reset();
-    ofAddListener(ofEvents().update, this, &ofxScrollablePanel::update);
+    //ofAddListener(ofEvents().update, this, &ofxScrollablePanel::update);
+    scrollBar = ofRectangle(anchor.x+width, 0, 10, height);
 }
 
 void ofxScrollablePanel::begin(){
+    ofPushStyle();
     ofPushMatrix();
     ofTranslate(anchor);
+    ofSetColor(255, 255, 255, 200);
+    ofRect(width, 0, 10, height);
+    ofSetColor(100, 100, 100, 200);
+    if(contentHeight > 0){
+        ofRect(width, -ofMap(position, 0, contentHeight, 0, height, true), 10, 15);
+    }
     ofTranslate(0, position);
+
+
+}
+void ofxScrollablePanel::setContentHeight(float _height){
+    newContentHeight = _height;
 }
 
 void ofxScrollablePanel::end(){
     ofPopMatrix();
+    ofSetColor(255, 255, 255, 255);
+    ofPopStyle();
 }
 
-void ofxScrollablePanel::update(ofEventArgs& args){
+void ofxScrollablePanel::update(){
     
     float t=ofGetElapsedTimef();
     float dt=t-time;
     time=t;
+    
+    contentHeight = ofLerp(contentHeight, newContentHeight, dt);
     
     float accel=destination-position;
     accel*=(K/MASS);
@@ -71,8 +88,14 @@ bool ofxScrollablePanel::dragged(ofPoint pos, int ID){
 bool ofxScrollablePanel::released(ofPoint pos, int ID){
     if(p && pID==ID){
         destination = desOrigin + (pos.y - pOrigin);
-        if(destination > 0){
+        if(contentHeight<height){
             destination = 0;
+        }
+        else if(destination>0){
+            destination = 0;
+        }
+        else if(destination< (height-contentHeight)){
+            destination = (height-contentHeight);
         }
         p = false;
         return true;
